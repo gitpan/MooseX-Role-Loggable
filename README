@@ -1,0 +1,81 @@
+NAME
+    MooseX::Role::Loggable - Extensive, yet simple, logging role using
+    Log::Dispatchouli
+
+VERSION
+    version 0.001
+
+DESCRIPTION
+    This is a role to provide logging ability to whoever consumes it using
+    Log::Dispatchouli.
+
+    Once you consume this role, you have the following attributes and
+    methods.
+
+ATTRIBUTES
+  debug
+    A boolean for whether you're in debugging mode or not.
+
+    Default: no.
+
+    Read-only.
+
+  logger_facility
+    The facility the logger would use. This is useful for syslog.
+
+    Default: local6.
+
+  logger_ident
+    The ident the logger would use. This is useful for syslog.
+
+    Default: MooseX::Role::Loggable.
+
+    Read-only.
+
+  log_to_file
+    A boolean that determines if the logger would log to a file.
+
+    Default location of the file is in /tmp.
+
+    Default: no.
+
+    Read-only.
+
+  log_to_stdout
+    A boolean that determines if the logger would log to STDOUT.
+
+    Default: no.
+
+  log_to_stderr
+    A boolean that determines if the logger would log to STDERR.
+
+    Default: no.
+
+  logger
+    A Log::Dispatchouli object.
+
+METHODS
+    All methods here are imported from Log::Dispatchouli. You can read its
+    documentation to understand them better.
+
+  log
+    Log a message.
+
+  log_debug
+    Log a message only if in debug mode.
+
+  log_fatal
+    Log a message and die.
+
+  set_prefix
+    Set a prefix for all next messages.
+
+AUTHOR
+      Sawyer X <xsawyerx@cpan.org>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2011 by Sawyer X.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
