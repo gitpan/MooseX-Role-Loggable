@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 BEGIN {
-  $MooseX::Role::Loggable::VERSION = '0.001';
+  $MooseX::Role::Loggable::VERSION = '0.002';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -81,14 +81,30 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.001
+version 0.002
+
+=head1 SYNOPSIS
+
+    package My::Object;
+
+    use Moose;
+    with 'MooseX::Role::Loggable';
+
+    sub do_this {
+        my $self = shift;
+        $self->set_prefix('[do_this] ');
+        $self->log_debug('starting...');
+        ...
+        $self->log_debug('more stuff');
+    }
 
 =head1 DESCRIPTION
 
 This is a role to provide logging ability to whoever consumes it using
 L<Log::Dispatchouli>.
 
-Once you consume this role, you have the following attributes and methods.
+Once you consume this role, you have the attributes and methods documented
+below.
 
 =head1 ATTRIBUTES
 
