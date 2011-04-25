@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 BEGIN {
-  $MooseX::Role::Loggable::VERSION = '0.002';
+  $MooseX::Role::Loggable::VERSION = '0.003';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -14,7 +14,6 @@ has debug => (
     is      => 'ro',
     isa     => 'Bool',
     default => 0,
-    trigger => sub { shift->logger->set_debug(shift) },
 );
 
 has logger_facility => (
@@ -47,21 +46,76 @@ has log_to_stderr => (
     default => 0,
 );
 
+has log_file => (
+    is        => 'ro',
+    isa       => 'Str',
+    predicate => 'has_log_file',
+);
+
+has log_path => (
+    is        => 'ro',
+    isa       => 'Str',
+    predicate => 'has_log_path',
+);
+
+has log_pid => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 1,
+);
+
+has log_fail_fatal => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 1,
+);
+
+has log_muted => (
+    is      => 'ro',
+    isa     => 'Bool',
+    default => 0,
+);
+
+has log_quiet_fatal => (
+    is      => 'ro',
+    isa     => 'Str|ArrayRef',
+    default => 'stderr',
+);
+
+
 has logger => (
     is         => 'ro',
     isa        => 'Log::Dispatchouli',
-    handles    => [ 'log', 'log_fatal', 'log_debug', 'set_prefix' ],
+    handles    => [ qw/
+        log log_fatal log_debug
+        set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
+    / ],
     lazy_build => 1,
 );
 
 sub _build_logger {
-    my $self   = shift;
+    my $self     = shift;
+    my %optional = ();
+
+    foreach my $option ( qw/log_file log_path/ ) {
+        my $method = "has_$option";
+        if ( $self->$method ) {
+            $optional{$option} = $self->$option;
+        }
+    }
+
     my $logger = Log::Dispatchouli->new( {
-        ident     => $self->logger_ident,
-        facility  => $self->logger_facility,
-        to_file   => $self->log_to_file,
-        to_stdout => $self->log_to_stdout,
-        to_stderr => $self->log_to_stderr,
+        debug       => $self->debug,
+        ident       => $self->logger_ident,
+        facility    => $self->logger_facility,
+        to_file     => $self->log_to_file,
+        to_stdout   => $self->log_to_stdout,
+        to_stderr   => $self->log_to_stderr,
+        log_pid     => $self->log_pid,
+        fail_fatal  => $self->log_fail_fatal,
+        muted       => $self->log_muted,
+        quiet_fatal => $self->log_quiet_fatal,
+        %optional,
     } );
 
     return $logger;
@@ -81,7 +135,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -96,6 +150,7 @@ version 0.002
         $self->log_debug('starting...');
         ...
         $self->log_debug('more stuff');
+        $self->clear_prefix;
     }
 
 =head1 DESCRIPTION
@@ -152,6 +207,44 @@ A boolean that determines if the logger would log to STDERR.
 
 Default: B<no>.
 
+=head2 log_file
+
+The leaf name for the log file.
+
+Default: B<undef>
+
+=head2 log_path
+
+The path for the log file.
+
+Default: B<undef>
+
+=head2 log_pid
+
+Whether to append the PID to the log filename.
+
+Default: B<yes>
+
+=head2 log_fail_fatal
+
+Whether failure to log is fatal.
+
+Default: B<yes>
+
+=head2 log_muted
+
+Whether only fatals are logged.
+
+Default: B<no>
+
+=head2 log_quiet_fatal
+
+From L<Log::Dispatchouli>:
+I<'stderr' or 'stdout' or an arrayref of zero, one, or both fatal log messages
+will not be logged to these>.
+
+Default: B<stderr>
+
 =head2 logger
 
 A L<Log::Dispatchouli> object.
@@ -173,9 +266,29 @@ Log a message only if in debug mode.
 
 Log a message and die.
 
+=head2 set_debug
+
+Set the debug flag.
+
+=head2 clear_debug
+
+Clear the debug flag.
+
 =head2 set_prefix
 
 Set a prefix for all next messages.
+
+=head2 clear_prefix
+
+Clears the prefix for all next messages.
+
+=head2 set_muted
+
+Sets the mute property, which makes only fatal messages logged.
+
+=head2 clear_muted
+
+Clears the mute property.
 
 =head1 AUTHOR
 
