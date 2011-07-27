@@ -2,12 +2,13 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 BEGIN {
-  $MooseX::Role::Loggable::VERSION = '0.003';
+  $MooseX::Role::Loggable::VERSION = '0.004';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
-use Moose::Role;
+use Any::Moose 'Role';
 use Log::Dispatchouli;
+
 use namespace::autoclean;
 
 has debug => (
@@ -121,8 +122,6 @@ sub _build_logger {
     return $logger;
 }
 
-no Moose::Role;
-
 1;
 
 
@@ -135,7 +134,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -160,6 +159,8 @@ L<Log::Dispatchouli>.
 
 Once you consume this role, you have the attributes and methods documented
 below.
+
+This module uses L<Any::Moose> so you can use it with L<Moose> or L<Mouse>.
 
 =head1 ATTRIBUTES
 

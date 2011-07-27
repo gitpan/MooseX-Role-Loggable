@@ -3,7 +3,7 @@ NAME
     Log::Dispatchouli
 
 VERSION
-    version 0.003
+    version 0.004
 
 SYNOPSIS
         package My::Object;
@@ -26,6 +26,8 @@ DESCRIPTION
 
     Once you consume this role, you have the attributes and methods
     documented below.
+
+    This module uses Any::Moose so you can use it with Moose or Mouse.
 
 ATTRIBUTES
   debug

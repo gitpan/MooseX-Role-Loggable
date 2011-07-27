@@ -15,7 +15,7 @@ my %module_build_args = (
     'Test::More' => '0'
   },
   'configure_requires' => {
-    'ExtUtils::MakeMaker' => '6.31',
+    'ExtUtils::MakeMaker' => '6.30',
     'Module::Build' => '0.3601'
   },
   'dist_abstract' => 'Extensive, yet simple, logging role using Log::Dispatchouli',
@@ -23,14 +23,14 @@ my %module_build_args = (
     'Sawyer X <xsawyerx@cpan.org>'
   ],
   'dist_name' => 'MooseX-Role-Loggable',
-  'dist_version' => '0.003',
+  'dist_version' => '0.004',
   'license' => 'perl',
   'module_name' => 'MooseX::Role::Loggable',
   'recommends' => {},
   'recursive_test_files' => 1,
   'requires' => {
+    'Any::Moose' => '0',
     'Log::Dispatchouli' => '0',
-    'Moose::Role' => '0',
     'namespace::autoclean' => '0'
   },
   'script_files' => []

@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
@@ -20,7 +20,7 @@ my %WriteMakefileArgs = (
     'Test::More' => '0'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31',
+    'ExtUtils::MakeMaker' => '6.30',
     'Module::Build' => '0.3601'
   },
   'DISTNAME' => 'MooseX-Role-Loggable',
@@ -28,11 +28,11 @@ my %WriteMakefileArgs = (
   'LICENSE' => 'perl',
   'NAME' => 'MooseX::Role::Loggable',
   'PREREQ_PM' => {
+    'Any::Moose' => '0',
     'Log::Dispatchouli' => '0',
-    'Moose::Role' => '0',
     'namespace::autoclean' => '0'
   },
-  'VERSION' => '0.003',
+  'VERSION' => '0.004',
   'test' => {
     'TESTS' => 't/*.t'
   }
