@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 package MooseX::Role::Loggable;
-BEGIN {
-  $MooseX::Role::Loggable::VERSION = '0.004';
+{
+  $MooseX::Role::Loggable::VERSION = '0.005';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -83,7 +83,6 @@ has log_quiet_fatal => (
     default => 'stderr',
 );
 
-
 has logger => (
     is         => 'ro',
     isa        => 'Log::Dispatchouli',
@@ -122,6 +121,17 @@ sub _build_logger {
     return $logger;
 }
 
+sub log_fields {
+    my $self  = shift;
+    my @attrs = qw/
+        debug logger_facility logger_ident
+        log_to_file log_to_stdout log_to_stderr
+        log_file log_path log_pid log_fail_fatal log_muted log_quiet_fatal
+    /;
+
+    return map { $_ => $self->$_ } grep { defined $self->$_ } @attrs;
+};
+
 1;
 
 
@@ -134,7 +144,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 
@@ -155,10 +165,27 @@ version 0.004
 =head1 DESCRIPTION
 
 This is a role to provide logging ability to whoever consumes it using
-L<Log::Dispatchouli>.
+L<Log::Dispatchouli>. Once you consume this role, you have the attributes and
+methods documented below.
 
-Once you consume this role, you have the attributes and methods documented
-below.
+You can propagate your logging definitions to another object that uses
+L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
+
+    package Parent;
+    use Any::Moose;
+    use MooseX::Role::Loggable; # picking Mouse or Moose
+
+    has child => (
+        is         => 'ro',
+        isa        => 'Child',
+        lazy_build => 1,
+    );
+
+    sub _build_child {
+        my $self = shift;
+
+        return Child->new( $self->log_fields );
+    }
 
 This module uses L<Any::Moose> so you can use it with L<Moose> or L<Mouse>.
 
@@ -246,6 +273,18 @@ will not be logged to these>.
 
 Default: B<stderr>
 
+=head2 log_fields
+
+A hash of the fields definining how logging is being done.
+
+This is very useful when you want to propagate your logging onwards to another
+object which uses L<MooseX::Role::Loggable>.
+
+It will return the following attributes and their values in a hash: C<debug>,
+C<debug>, C<logger_facility>, C<logger_ident>, C<log_to_file>,
+C<log_to_stdout>, C<log_to_stderr>, C<log_file>, C<log_path>, C<log_pid>,
+C<log_fail_fatal>, C<log_muted>, C<log_quiet_fatal>.
+
 =head2 logger
 
 A L<Log::Dispatchouli> object.
@@ -293,7 +332,7 @@ Clears the mute property.
 
 =head1 AUTHOR
 
-  Sawyer X <xsawyerx@cpan.org>
+Sawyer X <xsawyerx@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -13,7 +13,7 @@ configure_requires:
   ExtUtils::MakeMaker: 6.30
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.200009, CPAN::Meta::Converter version 2.110580'
+generated_by: 'Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112150'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -23,6 +23,8 @@ requires:
   Any::Moose: 0
   Log::Dispatchouli: 0
   namespace::autoclean: 0
+  strict: 0
+  warnings: 0
 resources:
-  repository: http://github.com/xsawyerx/moosex-role-loggable
-version: 0.004
+  repository: git://github.com/xsawyerx/moosex-role-loggable.git
+version: 0.005

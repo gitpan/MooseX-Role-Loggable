@@ -9,32 +9,34 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'Extensive, yet simple, logging role using Log::Dispatchouli',
-  'AUTHOR' => 'Sawyer X <xsawyerx@cpan.org>',
-  'BUILD_REQUIRES' => {
-    'English' => '0',
-    'File::Find' => '0',
-    'File::Temp' => '0',
-    'Module::Build' => '0.3601',
-    'Moose' => '0',
-    'Test::More' => '0'
+  "ABSTRACT" => "Extensive, yet simple, logging role using Log::Dispatchouli",
+  "AUTHOR" => "Sawyer X <xsawyerx\@cpan.org>",
+  "BUILD_REQUIRES" => {
+    "English" => 0,
+    "File::Find" => 0,
+    "File::Temp" => 0,
+    "Module::Build" => "0.3601",
+    "Moose" => 0,
+    "Test::More" => 0
   },
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.30',
-    'Module::Build' => '0.3601'
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30",
+    "Module::Build" => "0.3601"
   },
-  'DISTNAME' => 'MooseX-Role-Loggable',
-  'EXE_FILES' => [],
-  'LICENSE' => 'perl',
-  'NAME' => 'MooseX::Role::Loggable',
-  'PREREQ_PM' => {
-    'Any::Moose' => '0',
-    'Log::Dispatchouli' => '0',
-    'namespace::autoclean' => '0'
+  "DISTNAME" => "MooseX-Role-Loggable",
+  "EXE_FILES" => [],
+  "LICENSE" => "perl",
+  "NAME" => "MooseX::Role::Loggable",
+  "PREREQ_PM" => {
+    "Any::Moose" => 0,
+    "Log::Dispatchouli" => 0,
+    "namespace::autoclean" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
-  'VERSION' => '0.004',
-  'test' => {
-    'TESTS' => 't/*.t'
+  "VERSION" => "0.005",
+  "test" => {
+    "TESTS" => "t/*.t"
   }
 );
 

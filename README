@@ -3,7 +3,7 @@ NAME
     Log::Dispatchouli
 
 VERSION
-    version 0.004
+    version 0.005
 
 SYNOPSIS
         package My::Object;
@@ -22,10 +22,27 @@ SYNOPSIS
 
 DESCRIPTION
     This is a role to provide logging ability to whoever consumes it using
-    Log::Dispatchouli.
+    Log::Dispatchouli. Once you consume this role, you have the attributes
+    and methods documented below.
 
-    Once you consume this role, you have the attributes and methods
-    documented below.
+    You can propagate your logging definitions to another object that uses
+    MooseX::Role::Loggable using the "log_fields" attribute as such:
+
+        package Parent;
+        use Any::Moose;
+        use MooseX::Role::Loggable; # picking Mouse or Moose
+
+        has child => (
+            is         => 'ro',
+            isa        => 'Child',
+            lazy_build => 1,
+        );
+
+        sub _build_child {
+            my $self = shift;
+
+            return Child->new( $self->log_fields );
+        }
 
     This module uses Any::Moose so you can use it with Moose or Mouse.
 
@@ -99,6 +116,17 @@ ATTRIBUTES
 
     Default: stderr
 
+  log_fields
+    A hash of the fields definining how logging is being done.
+
+    This is very useful when you want to propagate your logging onwards to
+    another object which uses MooseX::Role::Loggable.
+
+    It will return the following attributes and their values in a hash:
+    "debug", "debug", "logger_facility", "logger_ident", "log_to_file",
+    "log_to_stdout", "log_to_stderr", "log_file", "log_path", "log_pid",
+    "log_fail_fatal", "log_muted", "log_quiet_fatal".
+
   logger
     A Log::Dispatchouli object.
 
@@ -134,7 +162,7 @@ METHODS
     Clears the mute property.
 
 AUTHOR
-      Sawyer X <xsawyerx@cpan.org>
+    Sawyer X <xsawyerx@cpan.org>
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2011 by Sawyer X.
