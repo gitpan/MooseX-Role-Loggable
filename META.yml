@@ -22,9 +22,10 @@ name: MooseX-Role-Loggable
 requires:
   Any::Moose: 0
   Log::Dispatchouli: 0
+  Sys::Syslog: 0.16
   namespace::autoclean: 0
   strict: 0
   warnings: 0
 resources:
   repository: git://github.com/xsawyerx/moosex-role-loggable.git
-version: 0.005
+version: 0.006
