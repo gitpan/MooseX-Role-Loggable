@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.006';
+  $MooseX::Role::Loggable::VERSION = '0.007';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -144,7 +144,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.006
+version 0.007
 
 =head1 SYNOPSIS
 

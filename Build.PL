@@ -11,7 +11,6 @@ my %module_build_args = (
     "File::Find" => 0,
     "File::Temp" => 0,
     "Module::Build" => "0.3601",
-    "Moose" => 0,
     "Test::More" => 0
   },
   "configure_requires" => {
@@ -23,7 +22,7 @@ my %module_build_args = (
     "Sawyer X <xsawyerx\@cpan.org>"
   ],
   "dist_name" => "MooseX-Role-Loggable",
-  "dist_version" => "0.006",
+  "dist_version" => "0.007",
   "license" => "perl",
   "module_name" => "MooseX::Role::Loggable",
   "recommends" => {},
