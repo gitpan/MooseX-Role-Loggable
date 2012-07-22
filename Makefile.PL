@@ -12,10 +12,10 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "Extensive, yet simple, logging role using Log::Dispatchouli",
   "AUTHOR" => "Sawyer X <xsawyerx\@cpan.org>",
   "BUILD_REQUIRES" => {
-    "English" => 0,
     "File::Find" => 0,
     "File::Temp" => 0,
     "Module::Build" => "0.3601",
+    "Moo" => 0,
     "Test::More" => 0
   },
   "CONFIGURE_REQUIRES" => {
@@ -27,14 +27,18 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "MooseX::Role::Loggable",
   "PREREQ_PM" => {
-    "Any::Moose" => 0,
     "Log::Dispatchouli" => 0,
-    "Sys::Syslog" => "0.16",
+    "Moo" => "1.000001",
+    "Moo::Role" => 0,
+    "MooX::Types::MooseLike" => 0,
+    "Safe::Isa" => 0,
+    "Sub::Quote" => 0,
+    "Sys::Syslog" => "0.25",
     "namespace::autoclean" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.007",
+  "VERSION" => "0.008",
   "test" => {
     "TESTS" => "t/*.t"
   }

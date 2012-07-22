@@ -3,12 +3,12 @@ NAME
     Log::Dispatchouli
 
 VERSION
-    version 0.007
+    version 0.008
 
 SYNOPSIS
         package My::Object;
 
-        use Moose;
+        use Moose; # or Moo
         with 'MooseX::Role::Loggable';
 
         sub do_this {
@@ -29,22 +29,23 @@ DESCRIPTION
     MooseX::Role::Loggable using the "log_fields" attribute as such:
 
         package Parent;
-        use Any::Moose;
-        use MooseX::Role::Loggable; # picking Mouse or Moose
+        use Moo; # replaces Any::Moose and Mouse (and Moose)
+        use MooseX::Role::Loggable; # picking Moo or Moose
 
         has child => (
-            is         => 'ro',
-            isa        => 'Child',
-            lazy_build => 1,
+            is      => 'ro',
+            isa     => 'Child',
+            lazy    => 1,
+            builder => '_build_child',
         );
 
         sub _build_child {
             my $self = shift;
-
             return Child->new( $self->log_fields );
         }
 
-    This module uses Any::Moose so you can use it with Moose or Mouse.
+    This module uses Moo so it takes as little resources as it can by
+    default, and can seamlessly work if you're using either Moo or Moose.
 
 ATTRIBUTES
   debug
@@ -165,7 +166,7 @@ AUTHOR
     Sawyer X <xsawyerx@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2011 by Sawyer X.
+    This software is copyright (c) 2012 by Sawyer X.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
