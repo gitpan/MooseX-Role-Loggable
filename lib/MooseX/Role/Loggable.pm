@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.008';
+  $MooseX::Role::Loggable::VERSION = '0.009';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -92,9 +92,11 @@ has logger => (
     is      => 'lazy',
     isa     => quote_sub(q{
         use Safe::Isa;
-        $_[0]->$_isa('Log::Dispatchouli')
+        $_[0]->$_isa('Log::Dispatchouli')         ||
+        $_[0]->$_isa('Log::Dispatchouli::Proxy')
             or die "$_[0] must be a Log::Dispatchouli object";
     }),
+
     handles => [ qw/
         log log_fatal log_debug
         set_debug clear_debug set_prefix clear_prefix set_muted clear_muted
@@ -152,7 +154,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =head1 SYNOPSIS
 

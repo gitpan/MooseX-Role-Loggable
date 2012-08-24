@@ -12,10 +12,12 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "Extensive, yet simple, logging role using Log::Dispatchouli",
   "AUTHOR" => "Sawyer X <xsawyerx\@cpan.org>",
   "BUILD_REQUIRES" => {
+    "English" => 0,
     "File::Find" => 0,
     "File::Temp" => 0,
     "Module::Build" => "0.3601",
     "Moo" => 0,
+    "Test::Fatal" => 0,
     "Test::More" => 0
   },
   "CONFIGURE_REQUIRES" => {
@@ -38,7 +40,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.008",
+  "VERSION" => "0.009",
   "test" => {
     "TESTS" => "t/*.t"
   }

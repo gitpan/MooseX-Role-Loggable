@@ -7,10 +7,12 @@ use Module::Build 0.3601;
 
 my %module_build_args = (
   "build_requires" => {
+    "English" => 0,
     "File::Find" => 0,
     "File::Temp" => 0,
     "Module::Build" => "0.3601",
     "Moo" => 0,
+    "Test::Fatal" => 0,
     "Test::More" => 0
   },
   "configure_requires" => {
@@ -22,7 +24,7 @@ my %module_build_args = (
     "Sawyer X <xsawyerx\@cpan.org>"
   ],
   "dist_name" => "MooseX-Role-Loggable",
-  "dist_version" => "0.008",
+  "dist_version" => "0.009",
   "license" => "perl",
   "module_name" => "MooseX::Role::Loggable",
   "recommends" => {},
