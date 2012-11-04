@@ -3,7 +3,7 @@ NAME
     Log::Dispatchouli
 
 VERSION
-    version 0.009
+    version 0.010
 
 SYNOPSIS
         package My::Object;
@@ -161,6 +161,47 @@ METHODS
 
   clear_muted
     Clears the mute property.
+
+DEBUGGING
+    Occassionally you might encounter the following error:
+
+        no ident specified when using Log::Dispatchouli at Loggable.pm line 117.
+
+    The problem does not stem from MooseX::Role::Loggable, but from a
+    builder calling a logging method before the logger is built. Since Moo
+    and Moose do not assure order of building attributes, which means that
+    some attributes might not exist by the time you need them.
+
+    This specific error happens when the "ident" attribute isn't built by
+    the time a builder runs. In order to avoid it, the attribute which uses
+    the builder should be made lazy, and then called in the "BUILD" method.
+    Here is an example:
+
+        package Stuff;
+
+        use Moo; # or Moose
+        with 'MooseX::Role::Logger';
+
+        has db => (
+            is      => 'ro',
+            lazy    => 1,
+            builder => '_build_db',
+        }
+
+        sub _build_db {
+            my $self = shift;
+            $self->log_debug('Building DB');
+            ...
+        }
+
+        sub BUILD {
+            my $self = shift;
+            $self->db;
+        }
+
+    This makes the "db" attribute non-lazy, but during run-time. This will
+    assure that all the logging attributes are created before you build the
+    "db" attribute and call "log_debug".
 
 AUTHOR
     Sawyer X <xsawyerx@cpan.org>
