@@ -23,12 +23,13 @@ my %module_build_args = (
     "Sawyer X <xsawyerx\@cpan.org>"
   ],
   "dist_name" => "MooseX-Role-Loggable",
-  "dist_version" => "0.010",
+  "dist_version" => "0.100",
   "license" => "perl",
   "module_name" => "MooseX::Role::Loggable",
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
+    "Carp" => 0,
     "Log::Dispatchouli" => 0,
     "Moo" => "1.000001",
     "Moo::Role" => 0,

@@ -3,7 +3,7 @@ NAME
     Log::Dispatchouli
 
 VERSION
-    version 0.010
+    version 0.100
 
 SYNOPSIS
         package My::Object;
@@ -22,15 +22,40 @@ SYNOPSIS
 
 DESCRIPTION
     This is a role to provide logging ability to whoever consumes it using
-    Log::Dispatchouli. Once you consume this role, you have the attributes
-    and methods documented below.
+    Log::Dispatchouli. Once you consume this role, you have attributes and
+    methods for logging defined automatically.
 
-    You can propagate your logging definitions to another object that uses
-    MooseX::Role::Loggable using the "log_fields" attribute as such:
+        package MyObject;
+        use Moose # Moo works too
+        with 'MooseX::Role::Loggable';
+
+        sub run {
+            my $self = shift;
+
+            $self->log('Trying to do something');
+
+            # this only gets written if debug flag is on
+            $self->log_debug('Some debugging output');
+
+            $self->log(
+                { level => 'critical' },
+                'Critical log message',
+            );
+
+            $self->log_fatal('Log and die');
+        }
+
+    This module uses Moo so it takes as little resources as it can by
+    default, and can seamlessly work with both Moo or Moose.
+
+Propagating logging definitions
+    Sometimes your objects create additional object which might want to log
+    using the same settings. You can simply give them the same logger
+    object.
 
         package Parent;
-        use Moo; # replaces Any::Moose and Mouse (and Moose)
-        use MooseX::Role::Loggable; # picking Moo or Moose
+        use Moose;
+        with 'MooseX::Role::Loggable';
 
         has child => (
             is      => 'ro',
@@ -41,11 +66,8 @@ DESCRIPTION
 
         sub _build_child {
             my $self = shift;
-            return Child->new( $self->log_fields );
+            return Child->new( logger => $self->logger );
         }
-
-    This module uses Moo so it takes as little resources as it can by
-    default, and can seamlessly work if you're using either Moo or Moose.
 
 ATTRIBUTES
   debug
@@ -63,7 +85,7 @@ ATTRIBUTES
   logger_ident
     The ident the logger would use. This is useful for syslog.
 
-    Default: MooseX::Role::Loggable.
+    Default: calling object's class name.
 
     Read-only.
 
@@ -117,17 +139,6 @@ ATTRIBUTES
 
     Default: stderr
 
-  log_fields
-    A hash of the fields definining how logging is being done.
-
-    This is very useful when you want to propagate your logging onwards to
-    another object which uses MooseX::Role::Loggable.
-
-    It will return the following attributes and their values in a hash:
-    "debug", "debug", "logger_facility", "logger_ident", "log_to_file",
-    "log_to_stdout", "log_to_stderr", "log_file", "log_path", "log_pid",
-    "log_fail_fatal", "log_muted", "log_quiet_fatal".
-
   logger
     A Log::Dispatchouli object.
 
@@ -162,6 +173,18 @@ METHODS
   clear_muted
     Clears the mute property.
 
+  BUILDARGS
+    You shouldn't care about this. It takes care of propagating attributes
+    from a given logger (if you provided one) to the attributes this role
+    provides.
+
+  log_fields
+    DEPRECATED.
+
+    Please pass the logger attribute instead:
+
+        SomeObject->new( logger => $parent->logger );
+
 DEBUGGING
     Occassionally you might encounter the following error:
 
@@ -179,7 +202,7 @@ DEBUGGING
 
         package Stuff;
 
-        use Moo; # or Moose
+        use Moose;
         with 'MooseX::Role::Logger';
 
         has db => (

@@ -28,6 +28,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "MooseX::Role::Loggable",
   "PREREQ_PM" => {
+    "Carp" => 0,
     "Log::Dispatchouli" => 0,
     "Moo" => "1.000001",
     "Moo::Role" => 0,
@@ -39,7 +40,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.010",
+  "VERSION" => "0.100",
   "test" => {
     "TESTS" => "t/*.t"
   }

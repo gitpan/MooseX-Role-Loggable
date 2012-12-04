@@ -2,15 +2,28 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.010';
+  $MooseX::Role::Loggable::VERSION = '0.100';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
+use Carp;
+use Safe::Isa;
 use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
 use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
 use namespace::autoclean;
+
+my %attr_meth_map = (
+    logger_facility => 'facility',
+    logger_ident    => 'ident',
+    log_to_file     => 'to_file',
+    log_to_stdout   => 'to_stdout',
+    log_to_stderr   => 'to_stderr',
+    log_fail_fatal  => 'fail_fatal',
+    log_muted       => 'muted',
+    log_quiet_fatal => 'quiet_fatal',
+);
 
 has debug => (
     is      => 'ro',
@@ -27,7 +40,7 @@ has logger_facility => (
 has logger_ident => (
     is      => 'ro',
     isa     => Str,
-    default => sub {__PACKAGE__},
+    default => sub { ref shift },
 );
 
 has log_to_file => (
@@ -92,7 +105,7 @@ has logger => (
     is      => 'lazy',
     isa     => quote_sub(q{
         use Safe::Isa;
-        $_[0]->$_isa('Log::Dispatchouli')         ||
+        $_[0]->$_isa('Log::Dispatchouli')        ||
         $_[0]->$_isa('Log::Dispatchouli::Proxy')
             or die "$_[0] must be a Log::Dispatchouli object";
     }),
@@ -107,7 +120,7 @@ sub _build_logger {
     my $self     = shift;
     my %optional = ();
 
-    foreach my $option ( qw/log_file log_path/ ) {
+    foreach my $option ( qw<log_file log_path> ) {
         my $method = "has_$option";
         if ( $self->$method ) {
             $optional{$option} = $self->$option;
@@ -131,16 +144,43 @@ sub _build_logger {
     return $logger;
 }
 
-sub log_fields {
-    my $self  = shift;
-    my @attrs = qw/
+# if we already have a logger, use its values
+sub BUILDARGS {
+    my $class = shift;
+    my %args  = @_;
+    my @items = qw<
         debug logger_facility logger_ident
-        log_to_file log_to_stdout log_to_stderr
-        log_file log_path log_pid log_fail_fatal log_muted log_quiet_fatal
-    /;
+        log_to_file log_to_stdout log_to_stderr log_file log_path
+        log_pid log_fail_fatal log_muted log_quiet_fatal
+    >;
 
-    return map { $_ => $self->$_ } grep { defined $self->$_ } @attrs;
-};
+    if ( exists $args{'logger'} ) {
+        $args{'logger'}->$_isa('Log::Dispatchouli')        ||
+        $args{'logger'}->$_isa('Log::Dispatchouli::Proxy')
+            or croak 'logger must be a Log::Dispatchouli object';
+
+        foreach my $item (@items) {
+            # if value is overridden, don't touch it
+            exists $args{$item} and next;
+
+            my $attr = exists $attr_meth_map{$item} ?
+                       $attr_meth_map{$item}        :
+                       $item;
+
+            exists $args{'logger'}{$attr}
+                and $args{$item} = $args{'logger'}{$attr};
+        }
+    }
+
+    return {%args};
+}
+
+sub log_fields {
+    my $self = shift;
+    carp 'Calling ->log_fields() is deprecated, ' .
+         'it will be removed in the next version';
+    return ( logger => $self->logger );
+}
 
 1;
 
@@ -154,7 +194,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.010
+version 0.100
 
 =head1 SYNOPSIS
 
@@ -175,15 +215,40 @@ version 0.010
 =head1 DESCRIPTION
 
 This is a role to provide logging ability to whoever consumes it using
-L<Log::Dispatchouli>. Once you consume this role, you have the attributes and
-methods documented below.
+L<Log::Dispatchouli>. Once you consume this role, you have attributes and
+methods for logging defined automatically.
 
-You can propagate your logging definitions to another object that uses
-L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
+    package MyObject;
+    use Moose # Moo works too
+    with 'MooseX::Role::Loggable';
+
+    sub run {
+        my $self = shift;
+
+        $self->log('Trying to do something');
+
+        # this only gets written if debug flag is on
+        $self->log_debug('Some debugging output');
+
+        $self->log(
+            { level => 'critical' },
+            'Critical log message',
+        );
+
+        $self->log_fatal('Log and die');
+    }
+
+This module uses L<Moo> so it takes as little resources as it can by default,
+and can seamlessly work with both L<Moo> or L<Moose>.
+
+=head1 Propagating logging definitions
+
+Sometimes your objects create additional object which might want to log
+using the same settings. You can simply give them the same logger object.
 
     package Parent;
-    use Moo; # replaces Any::Moose and Mouse (and Moose)
-    use MooseX::Role::Loggable; # picking Moo or Moose
+    use Moose;
+    with 'MooseX::Role::Loggable';
 
     has child => (
         is      => 'ro',
@@ -194,11 +259,8 @@ L<MooseX::Role::Loggable> using the C<log_fields> attribute as such:
 
     sub _build_child {
         my $self = shift;
-        return Child->new( $self->log_fields );
+        return Child->new( logger => $self->logger );
     }
-
-This module uses L<Moo> so it takes as little resources as it can by default,
-and can seamlessly work if you're using either L<Moo> or L<Moose>.
 
 =head1 ATTRIBUTES
 
@@ -220,7 +282,7 @@ Default: B<local6>.
 
 The ident the logger would use. This is useful for syslog.
 
-Default: B<MooseX::Role::Loggable>.
+Default: B<calling object's class name>.
 
 Read-only.
 
@@ -284,18 +346,6 @@ will not be logged to these>.
 
 Default: B<stderr>
 
-=head2 log_fields
-
-A hash of the fields definining how logging is being done.
-
-This is very useful when you want to propagate your logging onwards to another
-object which uses L<MooseX::Role::Loggable>.
-
-It will return the following attributes and their values in a hash: C<debug>,
-C<debug>, C<logger_facility>, C<logger_ident>, C<log_to_file>,
-C<log_to_stdout>, C<log_to_stderr>, C<log_file>, C<log_path>, C<log_pid>,
-C<log_fail_fatal>, C<log_muted>, C<log_quiet_fatal>.
-
 =head2 logger
 
 A L<Log::Dispatchouli> object.
@@ -341,6 +391,19 @@ Sets the mute property, which makes only fatal messages logged.
 
 Clears the mute property.
 
+=head2 BUILDARGS
+
+You shouldn't care about this. It takes care of propagating attributes
+from a given logger (if you provided one) to the attributes this role provides.
+
+=head2 log_fields
+
+B<DEPRECATED>.
+
+Please pass the logger attribute instead:
+
+    SomeObject->new( logger => $parent->logger );
+
 =head1 DEBUGGING
 
 Occassionally you might encounter the following error:
@@ -359,7 +422,7 @@ example:
 
     package Stuff;
 
-    use Moo; # or Moose
+    use Moose;
     with 'MooseX::Role::Logger';
 
     has db => (
