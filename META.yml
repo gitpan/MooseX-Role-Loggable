@@ -37,4 +37,4 @@ requires:
 resources:
   bugtracker: http://github.com/xsawyerx/moosex-role-loggable/issues
   repository: http://github.com/xsawyerx/moosex-role-loggable
-version: 0.101
+version: 0.110

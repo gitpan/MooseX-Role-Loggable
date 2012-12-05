@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.101';
+  $MooseX::Role::Loggable::VERSION = '0.110';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -161,14 +161,18 @@ sub BUILDARGS {
 
         foreach my $item (@items) {
             # if value is overridden, don't touch it
-            exists $args{$item} and next;
-
             my $attr = exists $attr_meth_map{$item} ?
                        $attr_meth_map{$item}        :
                        $item;
 
-            exists $args{'logger'}{$attr}
-                and $args{$item} = $args{'logger'}{$attr};
+            if ( exists $args{$item} ) {
+                # override logger configuration
+                $args{'logger'}{$attr} = $args{$item};
+            } else {
+                # override our attributes if it's in logger
+                exists $args{'logger'}{$attr}
+                    and $args{$item} = $args{'logger'}{$attr};
+            }
         }
     }
 
@@ -199,7 +203,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.101
+version 0.110
 
 =head1 SYNOPSIS
 
