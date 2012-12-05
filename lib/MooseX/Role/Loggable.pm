@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.100';
+  $MooseX::Role::Loggable::VERSION = '0.101';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -176,9 +176,14 @@ sub BUILDARGS {
 }
 
 sub log_fields {
-    my $self = shift;
-    carp 'Calling ->log_fields() is deprecated, ' .
-         'it will be removed in the next version';
+    my $self    = shift;
+    my $warning =
+        '[MooseX::Role::Loggable] Calling ->log_fields() is deprecated, ' .
+        'it will be removed in the next version';
+
+    $self->log( { level => 'warning' }, $warning );
+    carp $warning;
+
     return ( logger => $self->logger );
 }
 
@@ -194,7 +199,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.100
+version 0.101
 
 =head1 SYNOPSIS
 
