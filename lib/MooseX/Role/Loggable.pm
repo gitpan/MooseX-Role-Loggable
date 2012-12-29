@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.110';
+  $MooseX::Role::Loggable::VERSION = '0.111';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -193,7 +193,7 @@ sub log_fields {
 
 1;
 
-
+__END__
 
 =pod
 
@@ -203,7 +203,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.110
+version 0.111
 
 =head1 SYNOPSIS
 
@@ -467,7 +467,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

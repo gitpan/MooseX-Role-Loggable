@@ -3,7 +3,7 @@ NAME
     Log::Dispatchouli
 
 VERSION
-    version 0.110
+    version 0.111
 
 SYNOPSIS
         package My::Object;

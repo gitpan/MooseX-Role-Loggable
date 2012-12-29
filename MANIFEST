@@ -11,6 +11,7 @@ t/00-compile.t
 t/author-critic.t
 t/basic.t
 t/buildargs.t
+t/log_fields.t
 t/logger.t
 t/propagate.t
 t/release-pod-coverage.t
