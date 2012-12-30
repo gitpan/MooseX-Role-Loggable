@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package MooseX::Role::Loggable;
 {
-  $MooseX::Role::Loggable::VERSION = '0.111';
+  $MooseX::Role::Loggable::VERSION = '0.112';
 }
 # ABSTRACT: Extensive, yet simple, logging role using Log::Dispatchouli
 
@@ -12,7 +12,7 @@ use Moo::Role;
 use MooX::Types::MooseLike::Base qw<Bool Str>;
 use Sub::Quote 'quote_sub';
 use Log::Dispatchouli;
-use namespace::autoclean;
+use namespace::sweep;
 
 my %attr_meth_map = (
     logger_facility => 'facility',
@@ -193,7 +193,7 @@ sub log_fields {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -203,7 +203,7 @@ MooseX::Role::Loggable - Extensive, yet simple, logging role using Log::Dispatch
 
 =head1 VERSION
 
-version 0.111
+version 0.112
 
 =head1 SYNOPSIS
 
@@ -467,3 +467,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+

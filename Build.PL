@@ -23,7 +23,7 @@ my %module_build_args = (
     "Sawyer X <xsawyerx\@cpan.org>"
   ],
   "dist_name" => "MooseX-Role-Loggable",
-  "dist_version" => "0.111",
+  "dist_version" => "0.112",
   "license" => "perl",
   "module_name" => "MooseX::Role::Loggable",
   "recommends" => {},
@@ -37,7 +37,7 @@ my %module_build_args = (
     "Safe::Isa" => 0,
     "Sub::Quote" => 0,
     "Sys::Syslog" => "0.25",
-    "namespace::autoclean" => 0,
+    "namespace::sweep" => 0,
     "strict" => 0,
     "warnings" => 0
   },

@@ -36,11 +36,11 @@ my %WriteMakefileArgs = (
     "Safe::Isa" => 0,
     "Sub::Quote" => 0,
     "Sys::Syslog" => "0.25",
-    "namespace::autoclean" => 0,
+    "namespace::sweep" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.111",
+  "VERSION" => "0.112",
   "test" => {
     "TESTS" => "t/*.t"
   }
